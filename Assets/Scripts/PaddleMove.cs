@@ -4,42 +4,42 @@ public class PaddleMove : MonoBehaviour
 {
     public float speed = 5f;
 
-    public float fireRate = 3f;
-    float timeFromLastShot = 0;
+    public float fireRate = 1f;
+    float timeFromLastShoot = 0;
     public GameObject bullet;
 
     void Update()
     {
-        HandleShooting();
-
         Move();
+        Shoot();
     }
 
+    //funkcja odpowiedzialna za ruch
     void Move()
     {
+        //Odczytujemy z GetAxisRaw w któr¹ stronê chcemy siê poruszaæ
         float x = Input.GetAxisRaw("Horizontal");
-
-        float speedDirectionX = x * speed * Time.deltaTime;
-
-        if (transform.position.x + speedDirectionX >= 9f)
-        {
-            return;
-        }
-
-        transform.position += new Vector3(speedDirectionX, 0, 0);
+        //wyliczamy prêdkoœæ w wbranym kierunku
+        float speedDir = x * speed * Time.deltaTime;
+        transform.position += new Vector3(speedDir, 0, 0);
     }
 
-    void HandleShooting()
+    void Shoot()
     {
-        timeFromLastShot += Time.deltaTime;
-        Vector3 position = transform.position + new Vector3(0, 0.2f, 0);
-
-        if (timeFromLastShot >= (1f / fireRate))
+        //liczymy kidy ostatnio wystrzeliliœmy
+        timeFromLastShoot += Time.deltaTime;
+        //wyliczamy gdzie ma siê pojawiæ pocisk
+        Vector3 pos = transform.position + new Vector3(0, 0.1f, 0);
+        //je¿eli czas od ostatniego wystrza³u jest wystarczaj¹co du¿y
+        if (timeFromLastShoot >= (1f / fireRate))
         {
+            //Po naciœniêciu klawisza
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                Instantiate(bullet, position, Quaternion.identity);
-                timeFromLastShot = 0;
+                //tworzymy pocisk
+                Instantiate(bullet, pos, Quaternion.identity);
+                //zerujemy czas od wystrzelenia
+                timeFromLastShoot = 0;
             }
         }
     }
